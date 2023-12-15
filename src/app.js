@@ -98,10 +98,10 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
-app.get('/hehes', (req, res) => {
+app.get('/api/hehes', (req, res) => {
   res.status(200).json({ message: 'Hello World!' });
 });
-app.post('/videos', upload.single('file'), (req, res) => {
+app.post('/api/videos', upload.single('file'), (req, res) => {
   // 上傳的文件信息在 req.file
   console.log('video:', req.file);
 
