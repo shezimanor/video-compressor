@@ -19,7 +19,7 @@ const outputDir = 'vc-output';
 // Port
 const PORT = process.env.PORT || 3000;
 // IP
-const IP = os.networkInterfaces().en0[1].address;
+const IP = getIPAddress();
 
 // 自動建立資料夾
 if (!fs.existsSync(`./${inputDir}`)) {
@@ -27,6 +27,22 @@ if (!fs.existsSync(`./${inputDir}`)) {
 }
 if (!fs.existsSync(`./${outputDir}`)) {
   fs.mkdirSync(`./${outputDir}`, { recursive: true });
+}
+
+// ip
+function getIPAddress() {
+  const interfaces = os.networkInterfaces();
+  for (const devName in interfaces) {
+    const iface = interfaces[devName];
+
+    for (const alias of iface) {
+      if (alias.family === 'IPv4' && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+
+  return '0.0.0.0';
 }
 
 // 設置 multer
