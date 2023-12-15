@@ -1,5 +1,5 @@
 # 選擇一個 Node.js 基礎映像
-FROM node:14
+FROM node:18
 
 # 設置工作目錄
 WORKDIR /usr/src/app
