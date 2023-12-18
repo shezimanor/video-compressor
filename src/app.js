@@ -89,7 +89,11 @@ cron.schedule(
 );
 
 // 設置 cors
-app.use(cors());
+app.use(
+  cors({
+    exposedHeaders: ['Content-Disposition']
+  })
+);
 
 // 為了處理 JSON 請求體
 app.use(express.json());
@@ -101,7 +105,7 @@ app.get('/', (req, res) => {
 app.get('/api/hehes', (req, res) => {
   res.status(200).json({ message: 'Hello World!' });
 });
-app.post('/api/videos', upload.single('file'), (req, res) => {
+app.post('/api/videos/compress', upload.single('file'), (req, res) => {
   // 上傳的文件信息在 req.file
   console.log('video:', req.file);
 
@@ -116,7 +120,11 @@ app.post('/api/videos', upload.single('file'), (req, res) => {
   // 壓縮這個影片
   ffmpeg(req.file.path)
     .size('?x480')
+    // .videoCodec('libx264') // 這個不用特別加，因為 ffmpeg 會自動選擇
     .output(outputPath)
+    // 設置 CRF 值，數值範圍通常是 0（無損）到 51（最差質量）
+    // 通常 18-28 是可接受的範圍，其中 18 是視覺上無損的
+    .outputOptions('-crf 28')
     .on('end', function (err) {
       // 發送文件給用戶
       res.download(outputPath, (err) => {
